@@ -1,0 +1,7 @@
+# Angular y Node
+**/node_modules/
+**/dist/
+**/.angular/cache/
+**/.env
+.DS_Store
+npm-debug.log*
