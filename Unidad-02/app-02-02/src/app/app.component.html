@@ -1,0 +1,33 @@
+<h1>Pipes en Angular 19</h1>
+<hr>
+
+<!-- Pipes de texto -->
+<h2>1. Pipes de texto</h2>
+<p>Uppercase: {{ nombre | uppercase }}</p>
+<p>Lowercase: {{ nombre | lowercase }}</p>
+<p>Titlecase: {{ nombre2 | titlecase }}</p>
+<p>Slice (2): {{ nombre | slice:2 }}</p>
+<p>Slice (0:4): {{ nombre | slice:0:4 }}</p>
+
+<!-- Pipes de números -->
+<h2>2. Pipes de número</h2>
+<p>PI (3.0-0): {{ PI | number:'3.0-0' }}</p>
+<p>Porcentaje: {{ porcentaje | percent }}</p>
+<p>Salario: {{ salario | currency }}</p>
+<p>Salario en COP: {{ salario | currency:'COP' }}</p>
+
+<!-- Pipes de fecha -->
+<h2>3. Pipe de fecha</h2>
+<p>Fecha actual: {{ fecha | date }}</p>
+<p>Fecha larga: {{ fecha | date:'fullDate' }}</p>
+<p>Fecha corta: {{ fecha | date:'shortDate' }}</p>
+
+<!-- Pipe async -->
+<h2>4. Pipe async</h2>
+<p>Promesa: {{ promesa | async }}</p>
+
+<!-- Pipes personalizados -->
+<h2>5. Pipes personalizados</h2>
+<p>Capitalizado: {{ texto | capitalizado }}</p>
+<p>Contraseña segura: {{ password | contrasena:true }}</p>
+<p>Contraseña visible: {{ password | contrasena:false }}</p>
