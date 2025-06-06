@@ -1,0 +1,15 @@
+<div class="tarjeta">
+  <h3 class="titulo">👦 Componente Hijo</h3>
+  <p><span class="valor-rojo">{{ valor }}</span></p>
+
+
+  <div>
+    <button class="btn-moderno" (click)="multiplicar()">✖️ Multiplicar</button>
+    <button class="btn-moderno" (click)="dividir()">➗ Dividir</button>
+  </div>
+
+  <app-nieto
+    [valor]="valor"
+    (valorReset)="actualizarDesdeNieto($event)">
+  </app-nieto>
+</div>

@@ -1,0 +1,13 @@
+<div class="tarjeta">
+  <h2 class="titulo">👨‍👦 Componente Padre</h2>
+ <p> <span class="valor-rojo">{{ valor }}</span></p>
+  <div>
+    <button class="btn-moderno" (click)="incrementar()">➕ Incrementar</button>
+    <button class="btn-moderno" (click)="decrementar()">➖ Decrementar</button>
+  </div>
+
+  <app-hijo
+    [valor]="valor"
+    (valorCambiado)="actualizarDesdeHijo($event)">
+  </app-hijo>
+</div>
