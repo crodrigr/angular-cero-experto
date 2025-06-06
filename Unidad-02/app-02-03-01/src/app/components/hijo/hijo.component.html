@@ -1,0 +1,12 @@
+<!-- hijo.component.html -->
+<div class="tarjeta">
+  <h3>Hijo</h3>
+  <p class="titulo">Valor actual: <span class="rojo">{{ valor }}</span></p>
+  <button class="btn-moderno" (click)="multiplicar()">✖️ Multiplicar</button>
+  <button class="btn-moderno" (click)="dividir()">➗ Dividir</button>
+
+  <app-nieto
+    [valor]="valor"
+    (valorReset)="actualizarDesdeNieto($event)">
+  </app-nieto>
+</div>

@@ -1,0 +1,13 @@
+<!-- padre.component.html -->
+<div class="tarjeta">
+  <h2>Padre</h2>
+  <p class="titulo">Valor actual: <span class="rojo">{{ valorSignal() }}</span></p>
+  <button class="btn-moderno" (click)="incrementar()">➕ Incrementar</button>
+  <button class="btn-moderno" (click)="decrementar()">➖ Decrementar</button>
+
+  <app-hijo
+    [valor]="valorSignal()"
+    (valorCambiado)="actualizarDesdeHijo($event)"
+    (valorReset)="actualizarDesdeNieto($event)">
+  </app-hijo>
+</div>
