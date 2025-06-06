@@ -1,0 +1,10 @@
+.card {
+  min-height: 100%;
+}
+.card-body {
+  display: flex;
+  flex-direction: column;
+}
+.card-text {
+  font-size: 0.9rem;
+}
