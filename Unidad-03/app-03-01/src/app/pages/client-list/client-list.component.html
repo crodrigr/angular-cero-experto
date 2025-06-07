@@ -1,0 +1,29 @@
+<div class="container mt-4">
+    <h2>Clientes Registrados</h2>
+
+    <div class="mb-3">
+        <a routerLink="/form-template" class="btn btn-primary me-2">Crear (Template-driven)</a>
+        <a routerLink="/form-reactive" class="btn btn-success">Crear (Reactivo)</a>
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Correo</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let c of clientes">
+                <td>{{ c.nombre }}</td>
+                <td>{{ c.correo }}</td>
+                <td>
+                    <a [routerLink]="['/form-template', c.id]" class="btn btn-warning btn-sm">Editar TD</a>
+                    <a [routerLink]="['/form-reactive', c.id]" class="btn btn-info btn-sm">Editar RF</a>
+                    <button class="btn btn-danger btn-sm" (click)="delete(c.id)">Eliminar</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

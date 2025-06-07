@@ -1,0 +1,102 @@
+<!-- src/app/pages/template-form.component.html -->
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-10 col-xl-8">
+      <div class="card shadow-sm">
+        <div class="card-body p-4">
+          <h3 class="mb-4 text-center text-primary">Registro de Cliente</h3>
+
+          <form #form="ngForm" (ngSubmit)="onSubmit(form)" class="row g-3">
+
+            <!-- Nombre -->
+            <div class="col-md-12">
+              <label class="form-label">Nombre completo</label>
+              <input name="nombre" [(ngModel)]="cliente.nombre" class="form-control"
+                     placeholder="Mínimo 30 caracteres"
+                     required minlength="30" #nombre="ngModel" />
+              <div class="text-danger small" *ngIf="nombre.invalid && nombre.touched">
+                <div *ngIf="nombre.errors?.['required']">El nombre es obligatorio.</div>
+                <div *ngIf="nombre.errors?.['minlength']">Debe tener al menos 30 caracteres.</div>
+              </div>
+            </div>
+
+            <!-- Correo -->
+            <div class="col-md-12">
+              <label class="form-label">Correo electrónico</label>
+              <input name="correo" [(ngModel)]="cliente.correo" class="form-control"
+                     placeholder="ejemplo@correo.com"
+                     required email #correo="ngModel" />
+              <div class="text-danger small" *ngIf="correo.invalid && correo.touched">
+                <div *ngIf="correo.errors?.['required']">El correo es obligatorio.</div>
+                <div *ngIf="correo.errors?.['email']">Debe tener un formato válido.</div>
+              </div>
+            </div>
+
+            <!-- Tipo de documento -->
+            <div class="col-md-6">
+              <label class="form-label">Tipo de Documento</label>
+              <select name="tipoDocumento" [(ngModel)]="cliente.tipoDocumento" class="form-select" required>
+                <option value="CC">Cédula</option>
+                <option value="TI">Tarjeta de Identidad</option>
+                <option value="CE">Cédula de Extranjería</option>
+              </select>
+            </div>
+
+            <!-- Documento -->
+            <div class="col-md-6">
+              <label class="form-label">Número de Documento</label>
+              <input name="documento" [(ngModel)]="cliente.documento" class="form-control"
+                     required #documento="ngModel" />
+              <div class="text-danger small" *ngIf="documento.invalid && documento.touched">
+                El número de documento es obligatorio.
+              </div>
+            </div>
+
+            <!-- Edad -->
+            <div class="col-md-4">
+              <label class="form-label">Edad</label>
+              <input type="number" name="edad" [(ngModel)]="cliente.edad" class="form-control"
+                     required min="1" #edad="ngModel" />
+              <div class="text-danger small" *ngIf="edad.invalid && edad.touched">
+                La edad es obligatoria y debe ser un número.
+              </div>
+            </div>
+
+            <!-- Intereses -->
+            <div class="col-md-8">
+              <label class="form-label">Intereses</label><br />
+              <div class="form-check form-check-inline" *ngFor="let i of intereses">
+                <input type="checkbox" class="form-check-input"
+                       [checked]="cliente.intereses.includes(i)"
+                       (change)="onCheckboxChange($event, i)" />
+                <label class="form-check-label me-3">{{ i }}</label>
+              </div>
+              <div class="text-danger small mt-1" *ngIf="!validarIntereses() && form.submitted">
+                Debes seleccionar al menos un interés.
+              </div>
+            </div>
+
+            <!-- Términos -->
+            <div class="col-12">
+              <div class="form-check">
+                <input type="checkbox" name="aceptaTerminos" [(ngModel)]="cliente.aceptaTerminos"
+                       class="form-check-input" required />
+                <label class="form-check-label">Acepto los términos y condiciones</label>
+              </div>
+            </div>
+
+            <!-- Botones -->
+            <div class="col-12 text-center mt-3">
+              <button class="btn btn-primary px-4 me-2"
+                      [disabled]="form.invalid || !validarIntereses()">
+                {{ editando ? 'Actualizar' : 'Guardar' }}
+              </button>
+              <button type="button" class="btn btn-outline-secondary px-4" (click)="cancelar()">Cancelar</button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
