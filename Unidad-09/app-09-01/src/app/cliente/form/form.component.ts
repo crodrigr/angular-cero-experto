@@ -9,6 +9,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field'; 
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-form',
@@ -16,7 +17,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatFormFieldModule,
     MatInputModule,
     MatDatepickerModule,
-    MatNativeDateModule], 
+    MatNativeDateModule,RouterModule], 
   templateUrl: './form.component.html',
   styleUrls: ['./form.component.css']
 })

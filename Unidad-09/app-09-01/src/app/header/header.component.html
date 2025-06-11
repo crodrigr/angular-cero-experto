@@ -17,7 +17,7 @@
       </li>
 
       <li class="nav-item" *ngIf="authService.isAuthenticated()" routerLinkActive="active">
-        <a class="nav-link" routerLink="/clientes">Clientes</a>
+        <a class="nav-link" [routerLink]="['/clientes']">Clientes</a>
       </li>
 
       <li class="nav-item" *ngIf="!authService.isAuthenticated()" routerLinkActive="active">

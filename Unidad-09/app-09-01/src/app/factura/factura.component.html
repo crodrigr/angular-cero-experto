@@ -114,7 +114,7 @@
         <button type="submit" class="btn btn-primary me-2" [disabled]="factura.items.length === 0 || facturaForm.invalid">
           💾 Crear Factura
         </button>
-        <button type="button" class="btn btn-secondary" routerLink="/clientes">
+        <button type="button" class="btn btn-secondary" [routerLink]="['/clientes']">
           Cancelar
         </button>
       </div>

@@ -16,6 +16,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatOptionModule } from '@angular/material/core';
+import { RouterModule } from '@angular/router';
 
 
 @Component({
@@ -25,7 +26,7 @@ import { MatOptionModule } from '@angular/material/core';
     MatFormFieldModule,
     MatInputModule,
     MatAutocompleteModule,
-    MatOptionModule],
+    MatOptionModule,RouterModule],
   templateUrl: './factura.component.html',
   styleUrls: ['./factura.component.css']
 })

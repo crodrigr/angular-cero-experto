@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import swal from 'sweetalert2';
 import { DetalleComponent } from './detalle/detalle.component';
+import { ModalService } from './detalle/modal.service';
 
 @Component({
   selector: 'app-cliente',
@@ -18,7 +19,7 @@ export class ClienteComponent implements OnInit {
   clientes: Cliente[] = [];
   clienteSeleccionado: Cliente | null = null;
 
-  constructor(private clienteService: ClienteService) { }
+  constructor(private clienteService: ClienteService, private modalService: ModalService) { }
 
   ngOnInit(): void {
     this.getClientes();
@@ -60,11 +61,10 @@ export class ClienteComponent implements OnInit {
     });
   }
 
-  abrirModal(cliente: Cliente): void {
-  // lógica para abrir el modal
-  console.log('Abrir modal para:', cliente);
+ abrirModal(cliente: Cliente) {
+  this.clienteSeleccionado = cliente;
+   this.modalService.abrirModal();
 }
-
 
 
 }

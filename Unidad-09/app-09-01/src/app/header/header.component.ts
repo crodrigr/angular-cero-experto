@@ -3,11 +3,12 @@ import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../usuario/auth.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-header',
   standalone: true, // ✅ obligatorio en apps standalone
-  imports: [CommonModule], // ✅ necesario para usar *ngIf, etc.
+  imports: [CommonModule,RouterModule], // ✅ necesario para usar *ngIf, etc.
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
