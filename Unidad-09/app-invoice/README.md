@@ -1,8 +1,3 @@
-Aquí tienes el `README.md` completo, corregido, estructurado y listo para copiar y pegar:
-
----
-
-```markdown
 # 🧾 Proyecto Invoice - Sistema de Facturación
 
 Este proyecto consiste en un sistema de facturación compuesto por:
@@ -20,12 +15,10 @@ El backend está contenerizado y su imagen está publicada en Docker Hub:
 ## 📦 Estructura del Proyecto
 
 ```
-
 invoice/
 ├── frontend/                    # Proyecto Angular 19
 │   └── backend/                # Contiene docker-compose.yml para levantar el backend
 ├── backend-invoice/            # Proyecto Spring Boot (si se desea usar local sin docker)
-
 ```
 
 ---
@@ -38,17 +31,15 @@ Antes de ejecutar el `docker-compose`, **cree la base de datos en MySQL** con el
 En este caso, el nombre debe ser:
 
 ```
-
-db\_backend\_users
-
-````
+db_backend_users
+```
 
 Una vez creada la base de datos, ejecute:
 
 ```bash
 cd frontend/backend
 docker compose up -d
-````
+```
 
 Esto levantará el contenedor del backend y la base de datos.
 
@@ -92,10 +83,10 @@ http://localhost:8080/oauth/token
 
 ### 🔸 Usuarios Iniciales
 
-| Rol           | Usuario | Contraseña |
-| ------------- | ------- | ---------- |
-| Usuario común | camilo  | 123456     |
-| Administrador | admin   | 123456     |
+| Rol            | Usuario  | Contraseña |
+|----------------|----------|------------|
+| Usuario común  | camilo   | 123456     |
+| Administrador  | admin    | 123456     |
 
 ---
 
@@ -114,12 +105,10 @@ curl --location 'http://localhost:8080/oauth/token' \
 
 ## 📌 Notas Finales
 
-* Asegúrese de tener **Docker** y **Docker Compose** instalados correctamente.
-* Verifique que la base de datos `db_backend_users` exista antes de ejecutar el `docker-compose`.
-* Para cambiar los usuarios o configuraciones, puede modificar el proyecto backend y regenerar la imagen de Docker si es necesario.
+- Asegúrese de tener **Docker** y **Docker Compose** instalados correctamente.
+- Verifique que la base de datos `db_backend_users` exista antes de ejecutar el `docker-compose`.
+- Para cambiar los usuarios o configuraciones, puede modificar el proyecto backend y regenerar la imagen de Docker si es necesario.
 
 ---
 
-🛠 Proyecto desarrollado por [crodrigr](https://hub.docker.com/u/crodrigr) — Docker Hub
-
-```
+🛠 Proyecto desarrollado por [crodrigr](https://hub.docker.com/u/crodrigr) — Docker Hub  
