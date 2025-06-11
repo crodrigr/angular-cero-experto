@@ -28,6 +28,11 @@ export class AuthService {
     params.set('username', usuario.username);
     params.set('password', usuario.password);
 
+     // Imprimir cómo se va la petición
+  console.log('🟢 Enviando petición POST a:', urlEndpoint);
+  console.log('🔐 Headers:', httpHeaders.keys().map(key => `${key}: ${httpHeaders.get(key)}`));
+  console.log('📦 Cuerpo (x-www-form-urlencoded):', params.toString());
+
     return this.http.post<any>(urlEndpoint, params.toString(), { headers: httpHeaders });
   }
 
