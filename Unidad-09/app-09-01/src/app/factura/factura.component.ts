@@ -3,12 +3,13 @@ import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, mergeMap, startWith } from 'rxjs/operators';
 import { Factura } from './models/factura.model';
-import { ClienteService } from '../cliente/cliente.service'
+import { ClienteService } from '../cliente/cliente.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FacturaService } from './services/factura.service';
 import { Producto } from './models/producto.model';
 import { ItemFactura } from './models/item-factura.model';
 import swal from 'sweetalert2';
+
 import { NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -18,15 +19,19 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatOptionModule } from '@angular/material/core';
 import { RouterModule } from '@angular/router';
 
-
 @Component({
   selector: 'app-factura',
-  imports: [CommonModule, FormsModule,
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatAutocompleteModule,
-    MatOptionModule, RouterModule],
+    MatOptionModule,
+    RouterModule
+  ],
   templateUrl: './factura.component.html',
   styleUrls: ['./factura.component.css']
 })
@@ -36,30 +41,63 @@ export class FacturasComponent implements OnInit {
   factura: Factura = new Factura();
   autocompleteControl = new FormControl();
   productosFiltrados!: Observable<Producto[]>;
+  esVisualizacion: boolean = false;
 
-  constructor(private clienteService: ClienteService,
+  constructor(
+    private clienteService: ClienteService,
     private facturaService: FacturaService,
     private router: Router,
-    private activatedRoute: ActivatedRoute) {
+    private activatedRoute: ActivatedRoute
+  ) { }
 
-  }
-  ngOnInit() {
+  ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe(params => {
-      const idParam = params.get('clienteId');
-      if (idParam !== null) {
-        const clienteId = +idParam;
-        this.clienteService.getCliente(clienteId).subscribe(cliente => this.factura.cliente = cliente);
+      const facturaIdParam = params.get('id');
+      const clienteIdParam = params.get('clienteId');
+
+      if (facturaIdParam) {
+        const id = +facturaIdParam;
+        this.facturaService.getFactura(id).subscribe(factura => {
+          this.factura = factura;
+          this.titulo = `Factura #${factura.id}`;
+          this.esVisualizacion = true;
+
+          if (this.factura.items) {
+            console.log(`La factura tiene ${this.factura.items.length} ítem(s).`);
+
+            // Opción 1: si existe calcularGranTotal()
+            if (typeof this.factura.calcularGranTotal === 'function') {
+              console.log(`La factura total: ${this.factura.calcularGranTotal()} .`);
+            }
+
+            // Opción 2: cálculo manual
+            let total = 0;
+            this.factura.items.forEach(item => {
+              total += item.calcularImporte();
+            });
+            console.log(`La factura total2: ${total} .`);
+          }
+        });
+
+      } else if (clienteIdParam) {
+        const clienteId = +clienteIdParam;
+        this.clienteService.getCliente(clienteId).subscribe(cliente => {
+          this.factura.cliente = cliente;
+          this.titulo = 'Nueva Factura';
+          this.esVisualizacion = false;
+        });
       } else {
-        // Opcional: manejo de error
-        console.error('clienteId no está presente en los parámetros');
+        console.warn('Ni id de factura ni cliente encontrados en la ruta.');
       }
     });
-    this.productosFiltrados = this.autocompleteControl.valueChanges
-      .pipe(
-        map(value => typeof value === 'string' ? value : value.nombre),
-        mergeMap(value => value ? this._filter(value) : [])
-      );
+
+    this.productosFiltrados = this.autocompleteControl.valueChanges.pipe(
+      map(value => typeof value === 'string' ? value : value.nombre),
+      mergeMap(value => value ? this._filter(value) : [])
+    );
   }
+
+
   private _filter(value: string): Observable<Producto[]> {
     const filterValue = value.toLowerCase();
     return this.facturaService.filtrarProductos(filterValue);
@@ -69,74 +107,71 @@ export class FacturasComponent implements OnInit {
     return producto ? producto.nombre : '';
   }
 
-
   seleccionarProducto(value: any): void {
-    let producto = value as Producto;
-    console.log(producto);
+    const producto = value as Producto;
     if (this.existeItem(producto.id)) {
       this.incrementaCantidad(producto.id);
     } else {
-      let nuevoItem = new ItemFactura(producto);
+      const nuevoItem = new ItemFactura(producto);
       nuevoItem.producto = producto;
       this.factura.items.push(nuevoItem);
     }
-
     this.autocompleteControl.setValue('');
   }
 
   existeItem(id: number): boolean {
-    let existe = false;
-    this.factura.items.forEach((item: ItemFactura) => {
-      if (id === item.producto.id) {
-        existe = true;
-      }
-    });
-    return existe;
+    return this.factura.items.some(item => item.producto.id === id);
   }
 
   incrementaCantidad(id: number): void {
-    this.factura.items = this.factura.items.map((item: ItemFactura) => {
-      if (id === item.producto.id) {
-        ++item.cantidad;
+    this.factura.items = this.factura.items.map(item => {
+      if (item.producto.id === id) {
+        item.cantidad++;
       }
       return item;
     });
   }
 
   actualizarCantidad(id: number, event: any): void {
-    let cantidad: number = event.target.value as number;
-
-    if (cantidad == 0) {
-      return this.eliminarItemFactura(id);
+    const cantidad: number = +event.target.value;
+    if (cantidad === 0) {
+      this.eliminarItemFactura(id);
+    } else {
+      this.factura.items = this.factura.items.map(item => {
+        if (item.producto.id === id) {
+          item.cantidad = cantidad;
+        }
+        return item;
+      });
     }
-
-    this.factura.items = this.factura.items.map((item: ItemFactura) => {
-      if (id === item.producto.id) {
-        item.cantidad = cantidad;
-      }
-      return item;
-    });
   }
 
-
-
   eliminarItemFactura(id: number): void {
-    this.factura.items = this.factura.items.filter((item: ItemFactura) => id !== item.producto.id);
+    this.factura.items = this.factura.items.filter(item => item.producto.id !== id);
   }
 
   create(facturaForm: NgForm): void {
-    console.log(this.factura);
-    if (this.factura.items.length == 0) {
+    if (this.esVisualizacion) return;
+
+    if (this.factura.items.length === 0) {
       this.autocompleteControl.setErrors({ 'invalid': true });
     }
 
-    if (facturaForm.form.valid && this.factura.items.length > 0) {
+    if (facturaForm.valid && this.factura.items.length > 0) {
       this.facturaService.create(this.factura).subscribe(factura => {
-        swal.fire(this.titulo, `Factura ${factura.descripcion} creada con éxito!`, 'success');
+        swal.fire(this.titulo, `Factura "${factura.descripcion}" creada con éxito`, 'success');
         this.router.navigate(['/clientes']);
       });
     }
   }
 
+  getGranTotal(): number {
+  return this.factura.items.reduce((total, item) => {
+    const precio = item.producto?.precio ?? 0;
+    const cantidad = item.cantidad ?? 0;
+    return total + (precio * cantidad);
+  }, 0);
 }
 
+
+}

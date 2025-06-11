@@ -1,16 +1,18 @@
-<form #facturaForm="ngForm" novalidate (ngSubmit)="create(facturaForm)" class="needs-validation" [class.was-validated]="facturaForm.submitted">
-
+<form #facturaForm="ngForm" novalidate (ngSubmit)="create(facturaForm)" class="needs-validation"
+  [class.was-validated]="facturaForm.submitted">
   <div class="card shadow-sm my-4 mx-auto" style="max-width: 850px;">
     <div class="card-header bg-dark text-white">
-      <h5 class="mb-0">📄 Nueva Factura</h5>
+      <h5 class="mb-0">{{ titulo }}</h5>
     </div>
+
     <div class="card-body">
 
       <!-- Cliente -->
       <div class="mb-3 row" *ngIf="factura.cliente">
-        <label for="cliente" class="col-sm-2 col-form-label fw-bold">Cliente</label>
+        <label class="col-sm-2 col-form-label fw-bold">Cliente</label>
         <div class="col-sm-10">
-          <input type="text" class="form-control-plaintext" [value]="factura.cliente.nombre + ' ' + factura.cliente.apellido" readonly>
+          <input type="text" class="form-control-plaintext"
+            [value]="factura.cliente.nombre + ' ' + factura.cliente.apellido" readonly>
         </div>
       </div>
 
@@ -18,15 +20,9 @@
       <div class="mb-3 row">
         <label for="descripcion" class="col-sm-2 col-form-label">Descripción</label>
         <div class="col-sm-10">
-          <input
-            type="text"
-            class="form-control"
-            name="descripcion"
-            id="descripcion"
-            required
-            [(ngModel)]="factura.descripcion"
-            #descripcion="ngModel"
-            [class.is-invalid]="descripcion.invalid && (descripcion.touched || facturaForm.submitted)">
+          <input type="text" class="form-control" name="descripcion" id="descripcion" required
+            [(ngModel)]="factura.descripcion" #descripcion="ngModel" [readonly]="esVisualizacion"
+            [class.is-invalid]="!esVisualizacion && descripcion.invalid && (descripcion.touched || facturaForm.submitted)">
           <div class="invalid-feedback">La descripción es requerida.</div>
         </div>
       </div>
@@ -35,28 +31,20 @@
       <div class="mb-3 row">
         <label for="observacion" class="col-sm-2 col-form-label">Observación</label>
         <div class="col-sm-10">
-          <textarea
-            name="observacion"
-            id="observacion"
-            class="form-control"
-            [(ngModel)]="factura.observacion"
-            rows="2"
-          ></textarea>
+          <textarea class="form-control" name="observacion" id="observacion" rows="2" [(ngModel)]="factura.observacion"
+            [readonly]="esVisualizacion"></textarea>
           <div class="form-text">Opcional</div>
         </div>
       </div>
 
-      <!-- Autocomplete -->
-      <div class="mb-3 row">
+      <!-- Autocompletar producto -->
+      <div class="mb-3 row" *ngIf="!esVisualizacion">
         <label class="col-sm-2 col-form-label">Producto</label>
         <div class="col-sm-10">
           <mat-form-field class="w-100">
-            <input
-              matInput
-              placeholder="Añadir producto"
-              [formControl]="autocompleteControl"
-              [matAutocomplete]="auto">
-            <mat-autocomplete #auto="matAutocomplete" [displayWith]="mostrarNombre" (optionSelected)="seleccionarProducto($event.option.value)">
+            <input matInput placeholder="Añadir producto" [formControl]="autocompleteControl" [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete" [displayWith]="mostrarNombre"
+              (optionSelected)="seleccionarProducto($event.option.value)">
               <mat-option *ngFor="let producto of productosFiltrados | async" [value]="producto">
                 {{ producto.nombre }}
               </mat-option>
@@ -69,11 +57,12 @@
         </div>
       </div>
 
-      <!-- Advertencia si no hay items -->
+      <!-- Advertencia si no hay productos -->
       <div *ngIf="factura.items.length === 0" class="alert alert-info text-center">
         No hay líneas asignadas para la factura. Debe agregar al menos una.
       </div>
 
+      <!-- Tabla de productos -->
       <!-- Tabla de productos -->
       <div class="table-responsive" *ngIf="factura.items.length > 0">
         <table class="table table-bordered table-hover align-middle">
@@ -83,7 +72,7 @@
               <th class="text-end">Precio</th>
               <th class="text-center">Cantidad</th>
               <th class="text-end">Total</th>
-              <th class="text-center">Eliminar</th>
+              <th *ngIf="!esVisualizacion" class="text-center">Eliminar</th>
             </tr>
           </thead>
           <tbody>
@@ -91,34 +80,45 @@
               <td>{{ item.producto.nombre }}</td>
               <td class="text-end">{{ item.producto.precio | currency: 'COP':'symbol' }}</td>
               <td class="text-center">
-                <input type="number" class="form-control form-control-sm w-75 mx-auto text-center"
-                       [value]="item.cantidad" min="1"
-                       (change)="actualizarCantidad(item.producto.id, $event)">
+                <ng-container *ngIf="!esVisualizacion; else soloLectura">
+                  <input type="number" class="form-control form-control-sm w-75 mx-auto text-center"
+                    [value]="item.cantidad" min="1" (change)="actualizarCantidad(item.producto.id, $event)" />
+                </ng-container>
+                <ng-template #soloLectura>
+                  {{ item.cantidad }}
+                </ng-template>
               </td>
-              <td class="text-end">{{ item.calcularImporte() | currency: 'COP':'symbol' }}</td>
-              <td class="text-center">
-                <button type="button" class="btn btn-sm btn-outline-danger" (click)="eliminarItemFactura(item.producto.id)">✖</button>
+              <td class="text-end">
+                {{ (item.producto.precio * item.cantidad) | currency: 'COP':'symbol' }}
+              </td>
+              <td *ngIf="!esVisualizacion" class="text-center">
+                <button type="button" class="btn btn-sm btn-outline-danger"
+                  (click)="eliminarItemFactura(item.producto.id)">
+                  ✖
+                </button>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <!-- Total -->
+
       <div *ngIf="factura.items.length > 0" class="text-end fw-bold fs-5 me-3 mt-3">
-        Gran Total: {{ factura.calcularGranTotal() | currency: 'COP':'symbol' }}
+        <span *ngIf="esVisualizacion">Gran Total: {{ getGranTotal() | currency: 'COP':'symbol' }}</span>
+        <span *ngIf="!esVisualizacion" class="text-muted">Gran Total: {{ factura.calcularGranTotal() | currency:
+          'COP':'symbol' }}</span>
       </div>
 
       <!-- Botones -->
       <div class="text-end mt-4">
-        <button type="submit" class="btn btn-primary me-2" [disabled]="factura.items.length === 0 || facturaForm.invalid">
+        <button *ngIf="!esVisualizacion" type="submit" class="btn btn-primary me-2"
+          [disabled]="factura.items.length === 0 || facturaForm.invalid">
           💾 Crear Factura
         </button>
         <button type="button" class="btn btn-secondary" [routerLink]="['/clientes']">
-          Cancelar
+          Volver
         </button>
       </div>
-
     </div>
   </div>
 </form>
