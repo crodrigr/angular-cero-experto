@@ -1,7 +1,47 @@
-# Angular y Node
+########################
+# 🌐 Angular / Node.js #
+########################
+
 **/node_modules/
 **/dist/
 **/.angular/cache/
 **/.env
-.DS_Store
 npm-debug.log*
+.DS_Store
+
+########################
+# ☕ Spring Boot / Java #
+########################
+
+HELP.md
+target/
+build/
+
+### Maven Wrapper ###
+.mvn/
+!**/mvn/wrapper/maven-wrapper.jar
+
+### Eclipse / STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+nbproject/private/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+### VS Code ###
+.vscode/
