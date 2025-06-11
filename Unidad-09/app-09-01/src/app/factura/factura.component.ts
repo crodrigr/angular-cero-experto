@@ -10,11 +10,22 @@ import { Producto } from './models/producto.model';
 import { ItemFactura } from './models/item-factura.model';
 import swal from 'sweetalert2';
 import { NgForm } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatOptionModule } from '@angular/material/core';
 
 
 @Component({
   selector: 'app-factura',
-  imports: [],
+  imports: [CommonModule, FormsModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatAutocompleteModule,
+    MatOptionModule],
   templateUrl: './factura.component.html',
   styleUrls: ['./factura.component.css']
 })
@@ -56,9 +67,10 @@ export class FacturasComponent implements OnInit {
     return this.facturaService.filtrarProductos(filterValue);
   }
 
-  mostrarNombre(producto?: Producto): string | undefined {
-    return producto ? producto.nombre : undefined;
+  mostrarNombre(producto?: Producto): string {
+    return producto ? producto.nombre : '';
   }
+
 
   seleccionarProducto(value: any): void {
     let producto = value as Producto;
