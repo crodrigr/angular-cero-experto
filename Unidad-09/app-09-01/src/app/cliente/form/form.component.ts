@@ -8,16 +8,16 @@ import { FormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field'; 
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-form',
-  imports: [CommonModule,FormsModule,
+  imports: [CommonModule, FormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatDatepickerModule,
-    MatNativeDateModule,RouterModule], 
+    MatNativeDateModule, RouterModule],
   templateUrl: './form.component.html',
   styleUrls: ['./form.component.css']
 })
@@ -35,6 +35,7 @@ export class FormComponent implements OnInit {
 
   ngOnInit(): void {
     this.getRegiones();
+    this.getCargarCliente();
   }
 
   getRegiones(): void {
@@ -65,6 +66,17 @@ export class FormComponent implements OnInit {
   }
 
 
+  getCargarCliente(): void {
+    this.activatedRouter.paramMap.subscribe(params => {
+      let id = params.get('id');
+      if (id) {
+        this.clienteService.getCliente(Number(id)).subscribe(cliente => {
+          this.cliente = cliente
+        })
+      }
+    })
+
+  }
 
   compararRegion(o1: Region, o2: Region): boolean {
     if (o1 === undefined && o2 === undefined) {

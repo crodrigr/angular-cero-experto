@@ -26,7 +26,7 @@ import { RouterModule } from '@angular/router';
     MatFormFieldModule,
     MatInputModule,
     MatAutocompleteModule,
-    MatOptionModule,RouterModule],
+    MatOptionModule, RouterModule],
   templateUrl: './factura.component.html',
   styleUrls: ['./factura.component.css']
 })
@@ -44,7 +44,6 @@ export class FacturasComponent implements OnInit {
 
   }
   ngOnInit() {
-
     this.activatedRoute.paramMap.subscribe(params => {
       const idParam = params.get('clienteId');
       if (idParam !== null) {
@@ -55,8 +54,6 @@ export class FacturasComponent implements OnInit {
         console.error('clienteId no está presente en los parámetros');
       }
     });
-
-
     this.productosFiltrados = this.autocompleteControl.valueChanges
       .pipe(
         map(value => typeof value === 'string' ? value : value.nombre),

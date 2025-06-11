@@ -10,5 +10,6 @@ export const routes: Routes = [
   { path: 'clientes/form', component: FormComponent, canActivate: [AuthGuard] },
   { path: 'clientes/form/:id', component: FormComponent, canActivate: [AuthGuard] },
   { path: 'facturas/form/:clienteId', component: FacturasComponent, canActivate: [AuthGuard] },
+  { path: 'facturas/:id', component: FacturasComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent }
 ];
