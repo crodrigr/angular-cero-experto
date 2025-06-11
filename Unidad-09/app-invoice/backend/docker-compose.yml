@@ -1,0 +1,36 @@
+services:
+  mysql-db:
+    image: mysql:8.3
+    container_name: mysql-users-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: sasa1234
+      MYSQL_DATABASE: db_backend_users
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - users-network
+
+  users-backend:
+    image: crodrigr/backend-invoice:latest 
+    container_name: spring-users-app
+    depends_on:
+      - mysql-db
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/db_backend_users
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: sasa1234
+      SPRING_JPA_HIBERNATE_DDL_AUTO: create-drop
+    networks:
+      - users-network
+
+volumes:
+  mysql_data:
+
+networks:
+  users-network:
+    driver: bridge
